@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Maze from './Maze'
-// import Player from './Player'
 import './index.css';
 
 const MAZE_WIDTH = 20
@@ -35,7 +34,6 @@ class App extends Component {
     this.movePlayerLeft = this.movePlayerLeft.bind(this)
     this.movePlayerRight = this.movePlayerRight.bind(this)
     this.redraw = this.redraw.bind(this)
-    // this.onKeyPress = this.onKeyPress.bind(this)
 
     this.state = {
       player: {
@@ -60,35 +58,11 @@ class App extends Component {
   }
 
   componentWillMount () {
-    // const mazeContent = []
-
-    // let x = 0
-    // let y = 0
-
-    // while (mazeContent.length < MAZE_Height) {
-    //   mazeContent[y] = []
-    //   x = 0
-    //   while (mazeContent[y].length < MAZE_WIDTH) {
-    //     mazeContent[y].push({
-    //       'x':x, 
-    //       'y':y, 
-    //       type: this.getTileType(x,y)
-    //     })
-    //     ++x
-    //   }
-    //   ++y
-    // }
-
-    // this.setState({mazeContent})
     this.redraw()
   }
 
-  shouldComponentUpdate () {
-    return true
-  }
 
   componentDidMount () {
-    // console.log(this.game)
     this.game.focus()
   }
 
@@ -98,7 +72,6 @@ class App extends Component {
     const maze = this.state.maze.slice()
     const player = {...this.state.player}
     const chipToTileId = chip => {    
-      // console.log(JSON.stringify(chip,null,2))
       if (chip === 'x') {      
         return 'wall'    
       } else if (chip === 'O') {      
@@ -120,7 +93,6 @@ class App extends Component {
   }
 
   onKeyDown (event) {
-  // onKeyPress (event) {
     const {
       // altKey,
       // ctrlKey,
@@ -151,7 +123,6 @@ class App extends Component {
     } else if (keyCode === KEY.RIGHT) {
       movePlayerRight()
     }
-    // this.redraw()      
   }
 
   redraw () {
@@ -180,6 +151,8 @@ class App extends Component {
     console.log('move up!')
     const player = {...this.state.player}
     player.y--
+    const result = this.getTileType(player.x,player.y)
+    console.log('player moved into: ', result)
     console.log(JSON.stringify(player,null,2))
     this.setState({player},this.redraw)
   }
@@ -188,6 +161,8 @@ class App extends Component {
     console.log('move down!')
     const player = {...this.state.player}
     player.y++
+    const result = this.getTileType(player.x,player.y)
+    console.log('player moved into: ', result)
     console.log(JSON.stringify(player,null,2))
     this.setState({player},this.redraw)
   }
@@ -196,6 +171,8 @@ class App extends Component {
     console.log('move left!')
     const player = {...this.state.player}
     player.x--
+    const result = this.getTileType(player.x,player.y)
+    console.log('player moved into: ', result)
     console.log(JSON.stringify(player,null,2))
     this.setState({player},this.redraw)
   }
@@ -204,26 +181,12 @@ class App extends Component {
     console.log('move right!')
     const player = {...this.state.player}
     player.x++
+    const result = this.getTileType(player.x,player.y)
+    console.log('player moved into: ', result)
     console.log(JSON.stringify(player,null,2))
     this.setState({player},this.redraw)
   }
 
-  // onKeyPress (event) {
-  //   const {
-  //     // altKey,
-  //     // ctrlKey,
-  //     // key,
-  //     // locale,
-  //     // location,
-  //     // metaKey,
-  //     // repeat,
-  //     // which,
-  //     charCode,
-  //     keyCode,
-  //     shiftKey
-  //   } = event
-
-  // }
 
   render() {
     return (
@@ -231,7 +194,6 @@ class App extends Component {
         className="game-container" 
         tabIndex={0}
         onKeyDown={this.onKeyDown}
-        // onKeyPress={this.onKeyPress}
         ref={(element) => {this.game = element}}>
         <Maze
           mazeContent={this.state.mazeContent}
