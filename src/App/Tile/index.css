@@ -1,0 +1,44 @@
+.biscuit {
+  height: 5px;
+  width: 5px;
+  border: green 1px solid;
+  border-radius: 50%;
+  /*behavior: url(PIE.htc);*/
+  background-color: white;
+
+}
+
+.biscuit--big {
+  height: 12px;
+  width: 12px;
+  border: green 1px solid;
+  border-radius: 50%;
+  /*behavior: url(PIE.htc);*/
+  background-color: white;
+
+}
+.tile-container {
+  display: flex;
+  background-color: darkcyan;
+  background-color: #001a33;
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 1px lime solid;
+}
+
+.wall {
+  height: 20px;
+  width: 20px;
+  border: tomato 1px solid;
+  background-color: blue;
+}
+
+.player {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;  
+  border: tomato 1px solid;
+  background-color: yellow;
+}
