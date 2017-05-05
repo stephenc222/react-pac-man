@@ -1,0 +1,15 @@
+.score {
+  color: white;
+}
+.lives {
+  color: white;
+}
+.time {
+  color: white;
+}
+
+.hud-data {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

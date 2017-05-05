@@ -27,7 +27,7 @@ class Maze extends Component {
   }
   render () {
     return (
-      <div className={`Maze`}>
+      <div className={`maze-container`}>
         {this.props.mazeContent.map(this.renderMazeRow)}
       </div>
     )

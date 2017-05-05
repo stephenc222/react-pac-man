@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Maze from './Maze'
+import HUD from './HUD'
 import './index.css';
 
 const MAZE_WIDTH = 20
-const MAZE_Height = 11
+const MAZE_HEIGHT = 11
 
 const KEY = {
   // END: 35,
@@ -17,16 +18,11 @@ const KEY = {
   // ENTER: 13
 }
 
-// const CURSOR_KEYS = [
-//   KEY.UP,
-//   KEY.DOWN,
-//   KEY.LEFT,
-//   KEY.RIGHT
-// ]
 class App extends Component {
   constructor (props) {
     super(props)
 
+    this.timer = this.timer.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
@@ -42,9 +38,11 @@ class App extends Component {
         x: 1,
         y: 5,
         score: 0,
-        lives: 0,
+        lives: 3,
         invincible: false
       },
+      time: 10,
+      interval: '',
       biscuits: [],
       bigBiscuits: [
         { x: 1,  y:1 }, 
@@ -72,27 +70,34 @@ class App extends Component {
     this.draw()
   }
 
-
   componentDidMount () {
     this.game.focus()
+    const interval = setInterval(this.timer, 1000)
+    this.setState({interval})
   }
 
+  componentWillUnmount () {
+    clearInterval(this.state.interval);
+  }
+
+  timer () {
+    const time = this.state.time
+    if (!time) {
+      console.log('time\'s up!')
+      clearInterval(this.state.interval)
+      return
+    }
+    this.setState({ time: this.state.time - 1});
+  }
 
   createTileType (x,y) {
 
     const maze = this.state.maze.slice()
     const player = {...this.state.player}
     const bigBiscuits = this.state.bigBiscuits.slice()
-    // const biscuits = this.state.biscuits.slice()
     const chipToTileId = chip => {    
       if (chip === 'x') {      
         return 'wall'    
-        // if ( bigBiscuits.some( (elem) => { return (elem.x === elem.y ) })) {  'yes' } else { 'no'}
-// "yes"
-        // if ( x.some( (elem) => { return (elem === 'b') })) {  'yes' } else { 'no'}
-      // } else if (chip === 'O') {      
-
-      // } else if (x === bigBiscuits[0].x && y === bigBiscuits[0].y) {      
       } else if (x === player.x && y === player.y){      
         return 'player'    
       } else if (bigBiscuits.some((elem) => {return (x === elem.x && y === elem.y)})) {      
@@ -120,12 +125,6 @@ class App extends Component {
     const chipToTileId = chip => {    
       if (chip === 'x') {      
         return 'wall'    
-        // if ( bigBiscuits.some( (elem) => { return (elem.x === elem.y ) })) {  'yes' } else { 'no'}
-// "yes"
-        // if ( x.some( (elem) => { return (elem === 'b') })) {  'yes' } else { 'no'}
-      // } else if (chip === 'O') {      
-
-      // } else if (x === bigBiscuits[0].x && y === bigBiscuits[0].y) {      
       } else if (x === player.x && y === player.y){      
         return 'player'    
       } else if (bigBiscuits.some((elem) => {return (x === elem.x && y === elem.y && !elem.collected)})) {      
@@ -166,8 +165,6 @@ class App extends Component {
     const movePlayerLeft = this.movePlayerLeft
     const movePlayerRight = this.movePlayerRight
 
-    console.log('keyCode is: ', keyCode)
-
     if (keyCode === KEY.UP) {
       movePlayerUp()
     } else if (keyCode === KEY.DOWN) {
@@ -187,7 +184,7 @@ class App extends Component {
     let x = 0
     let y = 0
 
-    while (mazeContent.length < MAZE_Height) {
+    while (mazeContent.length < MAZE_HEIGHT) {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
@@ -210,7 +207,7 @@ class App extends Component {
     let x = 0
     let y = 0
 
-    while (mazeContent.length < MAZE_Height) {
+    while (mazeContent.length < MAZE_HEIGHT) {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
@@ -225,46 +222,42 @@ class App extends Component {
     this.setState({mazeContent, biscuits})
   }
   movePlayerUp () {
-    console.log('move up!')
     const player = {...this.state.player}
     player.y--
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y++
-    result === 'biscuit' && console.log(result,': increase score')
-    result === 'biscuit--big' && console.log(result,': increase score')
+    result === 'biscuit' && player.score++
+    result === 'biscuit--big' && (player.score += 10)
     this.setState({player},this.redraw)
   }
 
   movePlayerDown () {
-    console.log('move down!')
     const player = {...this.state.player}
     player.y++
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y--
-    result === 'biscuit' && console.log(result,': increase score')
-    result === 'biscuit--big' && console.log(result,': increase score')
+    result === 'biscuit' && player.score++
+    result === 'biscuit--big' && (player.score += 10)
     this.setState({player},this.redraw)
   }
 
   movePlayerLeft () {
-    console.log('move left!')
     const player = {...this.state.player}
     player.x--
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x++
-    result === 'biscuit' && console.log(result,': increase score')
-    result === 'biscuit--big' && console.log(result,': increase score')
+    result === 'biscuit' && player.score++
+    result === 'biscuit--big' && (player.score += 10)
     this.setState({player},this.redraw)
   }
 
   movePlayerRight () {
-    console.log('move right!')
     const player = {...this.state.player}
     player.x++
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x--
-    result === 'biscuit' && console.log(result,': increase score')
-    result === 'biscuit--big' && console.log(result,': increase score')
+    result === 'biscuit' && player.score++
+    result === 'biscuit--big' && (player.score += 10)
     this.setState({player},this.redraw)
   }
 
@@ -276,7 +269,12 @@ class App extends Component {
         tabIndex={0}
         onKeyDown={this.onKeyDown}
         ref={(element) => {this.game = element}}>
+        <div className={`game-title`}>REACT PAC-MAN</div>
         <div className="hud-container">
+          <HUD
+            player={this.state.player}
+            time={this.state.time}
+          />
         </div>
         <Maze
           mazeContent={this.state.mazeContent}

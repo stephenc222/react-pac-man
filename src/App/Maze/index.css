@@ -1,9 +1,17 @@
 .row-container {
   display: flex;
   flex-direction: row;
+  /*align-self: center;*/
+  /*justify-content: space-around;*/
 }
 
 .column-container {
   display: flex;
   flex-direction: column;
+}
+
+.maze-container {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
 }
