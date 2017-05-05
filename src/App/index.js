@@ -22,6 +22,7 @@ class App extends Component {
   constructor (props) {
     super(props)
 
+    this.playGame = this.playGame.bind(this)
     this.timer = this.timer.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
@@ -34,7 +35,7 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      gameState: 'PLAY',
+      gameState: 'START',
       player: {
         x: 1,
         y: 5,
@@ -84,6 +85,10 @@ class App extends Component {
 
   timer () {
     const time = this.state.time
+    const gameState = this.state.gameState
+    if (gameState === 'START') {
+      return
+    }
     if (!time) {
       console.log('time\'s up!')
       clearInterval(this.state.interval)
@@ -268,8 +273,20 @@ class App extends Component {
     window.location.reload()
   }
 
+  playGame () {
+    this.setState({gameState: 'PLAY'})
+  }
+
   renderGameState (gameState) {
-    if (gameState === 'PLAY') {
+
+    if (gameState === 'START') {
+      return (
+        <div className={'game-screen'} onClick={this.playGame}>
+          START GAME
+          <p className="text">Click to play!</p>
+        </div>
+      )
+    } else if (gameState === 'PLAY') {
       return (
         <Maze
           mazeContent={this.state.mazeContent}
@@ -277,7 +294,7 @@ class App extends Component {
       )
     } else if (gameState === 'GAMEOVER') {
       return (
-        <div className={'game-over'} onClick={this.reloadGame}>
+        <div className={'game-screen'} onClick={this.reloadGame}>
           GAME OVER
           <p className="text">Click to play again!</p>
         </div>
