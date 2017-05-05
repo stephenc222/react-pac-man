@@ -41,9 +41,16 @@ class App extends Component {
         y: 5,
         invincible: false
       },
+
+      bigBiscuits: [
+        { x: 1,  y:1 }, 
+        { x: 18, y:1 }, 
+        { x: 1,  y:9 }, 
+        { x: 18, y:9 }, 
+      ],
       maze: [
       'xxxxxxxxxxxxxxxxxxxx',    
-      'xO        x       Ox',    
+      'x         x        x',    
       'x x xxxxx x  xxx x x',    
       'x x     x xx     x x',    
       'x xxx x x  xxx xxx x',    
@@ -51,7 +58,7 @@ class App extends Component {
       'x xxx x x  xxx xxx x',    
       'x x     xx x     x x',    
       'x x xxx  x xxxxx x x',    
-      'xO                Ox',    
+      'x                  x',    
       'xxxxxxxxxxxxxxxxxxxx',  
       ]
     }
@@ -71,10 +78,17 @@ class App extends Component {
 
     const maze = this.state.maze.slice()
     const player = {...this.state.player}
+    const bigBiscuits = this.state.bigBiscuits.slice()
     const chipToTileId = chip => {    
       if (chip === 'x') {      
         return 'wall'    
-      } else if (chip === 'O') {      
+        // if ( bigBiscuits.some( (elem) => { return (elem.x === elem.y ) })) {  'yes' } else { 'no'}
+// "yes"
+        // if ( x.some( (elem) => { return (elem === 'b') })) {  'yes' } else { 'no'}
+      // } else if (chip === 'O') {      
+
+      // } else if (x === bigBiscuits[0].x && y === bigBiscuits[0].y) {      
+      } else if (bigBiscuits.some((elem) => {return (x === elem.x && y === elem.y)})) {      
         return 'biscuit--big'    
       } else if (x === player.x && y === player.y){      
         return 'player'    
