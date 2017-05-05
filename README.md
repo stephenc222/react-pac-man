@@ -1,6 +1,6 @@
 # React Pac-Man
 
-##Overview
+## Overview
 
 This is a react-based clone of the classic retro pac-man game. Have fun!
 
