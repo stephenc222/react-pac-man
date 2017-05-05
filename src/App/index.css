@@ -14,6 +14,20 @@
   color: white;
 }
 
+.game-over {
+  color: white;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.text {
+  display: flex;
+  font-size: 14px;
+}
+
 
 .App-header {
   background-color: #222;

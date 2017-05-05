@@ -34,6 +34,7 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
+      gameState: 'PLAY',
       player: {
         x: 1,
         y: 5,
@@ -67,6 +68,7 @@ class App extends Component {
   }
 
   componentWillMount () {
+    // this.setState({gameState:'PLAY'})
     this.draw()
   }
 
@@ -85,6 +87,7 @@ class App extends Component {
     if (!time) {
       console.log('time\'s up!')
       clearInterval(this.state.interval)
+      this.setState({gameState: 'GAMEOVER'})
       return
     }
     this.setState({ time: this.state.time - 1});
@@ -261,6 +264,27 @@ class App extends Component {
     this.setState({player},this.redraw)
   }
 
+  reloadGame () {
+    window.location.reload()
+  }
+
+  renderGameState (gameState) {
+    if (gameState === 'PLAY') {
+      return (
+        <Maze
+          mazeContent={this.state.mazeContent}
+        />
+      )
+    } else if (gameState === 'GAMEOVER') {
+      return (
+        <div className={'game-over'} onClick={this.reloadGame}>
+          GAME OVER
+          <p className="text">Click to play again!</p>
+        </div>
+      )
+    }
+  }
+
 
   render() {
     return (
@@ -276,9 +300,7 @@ class App extends Component {
             time={this.state.time}
           />
         </div>
-        <Maze
-          mazeContent={this.state.mazeContent}
-        />
+        {this.renderGameState(this.state.gameState)}
       </div>
     );
   }
