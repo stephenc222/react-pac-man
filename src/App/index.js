@@ -40,7 +40,8 @@ class App extends Component {
       player: {
         x: 1,
         y: 5,
-        direction: 'right',
+        // direction: 'right',
+        direction: 'left',
         score: 0,
         lives: 3,
         invincible: false
