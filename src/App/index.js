@@ -40,6 +40,7 @@ class App extends Component {
       player: {
         x: 1,
         y: 5,
+        direction: 'right',
         score: 0,
         lives: 3,
         invincible: false
@@ -233,6 +234,7 @@ class App extends Component {
   movePlayerUp () {
     const player = {...this.state.player}
     player.y--
+    player.direction = 'up'
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
@@ -243,6 +245,7 @@ class App extends Component {
   movePlayerDown () {
     const player = {...this.state.player}
     player.y++
+    player.direction = 'down'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
@@ -253,6 +256,7 @@ class App extends Component {
   movePlayerLeft () {
     const player = {...this.state.player}
     player.x--
+    player.direction = 'left'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
@@ -263,6 +267,7 @@ class App extends Component {
   movePlayerRight () {
     const player = {...this.state.player}
     player.x++
+    player.direction = 'right'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
@@ -291,6 +296,7 @@ class App extends Component {
       return (
         <Maze
           mazeContent={this.state.mazeContent}
+          player={this.state.player}
         />
       )
     } else if (gameState === 'GAMEOVER') {

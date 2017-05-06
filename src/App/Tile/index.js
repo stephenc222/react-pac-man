@@ -5,10 +5,12 @@ class Tile extends Component {
   render () {
     // console.log(this.props.tileObject)
     const tileObject = this.props.tileObject
+    const player = this.props.player
     if (tileObject.type === 'player') {
+      // console.log(this.props.player)
       return (
         <div className="tile-container">
-          <div className={tileObject.type + '--move-down'}>
+          <div className={tileObject.type + `--move-${player.direction}`}>
           </div>
         </div>
       )

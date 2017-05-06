@@ -21,7 +21,7 @@ class Maze extends Component {
     // console.log(mazeColumnObject)
     return (
       <div key={index} className="column-container">
-        <Tile tileObject={mazeColumnObject}/>
+        <Tile player={this.props.player} tileObject={mazeColumnObject}/>
       </div>
     )
   }
