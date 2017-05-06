@@ -35,7 +35,8 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      gameState: 'START',
+      // gameState: 'START',
+      gameState: 'PLAY',
       player: {
         x: 1,
         y: 5,
@@ -43,7 +44,7 @@ class App extends Component {
         lives: 3,
         invincible: false
       },
-      time: 10,
+      time: 250,
       interval: '',
       biscuits: [],
       bigBiscuits: [
