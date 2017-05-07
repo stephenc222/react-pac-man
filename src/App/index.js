@@ -24,6 +24,7 @@ class App extends Component {
 
     this.playGame = this.playGame.bind(this)
     this.timer = this.timer.bind(this)
+    this.drawGhost = this.drawGhost.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
@@ -45,6 +46,11 @@ class App extends Component {
         score: 0,
         lives: 3,
         invincible: false
+      },
+      ghost: {
+        x: 1,
+        y: 2,
+        canHurtPlayer: true
       },
       time: 250,
       interval: '',
@@ -187,6 +193,19 @@ class App extends Component {
     }
   }
 
+  drawGhost (x,y) {
+
+    const ghost = {...this.state.ghost}
+
+    if ( x === ghost.x && y === ghost.y) {
+      return true
+    } else {
+      return false
+    }
+    
+  }
+
+
   redraw () {
     const mazeContent = []
     const biscuits = []
@@ -199,7 +218,7 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        let tile = {x,y, type: this.getTileType(x,y)}
+        let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost(x,y)}
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         tile.type === 'biscuit--big' && bigBiscuits.push(tile)
@@ -222,7 +241,8 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        let tile = {x,y, type: this.createTileType(x,y)}
+        // let tile = {x,y, type: this.createTileType(x,y)}
+        let tile = {x,y, type: this.createTileType(x,y), ghostHere: this.drawGhost(x,y)}        
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         ++x

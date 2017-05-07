@@ -6,6 +6,32 @@ class Tile extends Component {
     // console.log(this.props.tileObject)
     const tileObject = this.props.tileObject
     const player = this.props.player
+
+    if (tileObject.ghostHere) {
+      return (
+        <div className="tile-container">
+          <div className="no-flex">
+            <div className="ghost blinky">
+              <div className="eyes">
+                <div className="eye_lt">
+                  <div className="ball"></div>
+                </div>
+                <div className="eye_rt">
+                  <div className="ball"></div>
+                </div>
+              </div>
+
+              <div className="bottom">
+                <div className="frill"></div>
+                <div className="frill"></div>
+                <div className="frill"></div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      )
+    }
     if (tileObject.type === 'player') {
       // console.log(this.props.player)
       return (
