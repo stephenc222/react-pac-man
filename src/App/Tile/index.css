@@ -1,10 +1,10 @@
 .biscuit {
-  height: 5px;
+  /*height: 5px;
   width: 5px;
   border: green 1px solid;
   border-radius: 50%;
-  /*behavior: url(PIE.htc);*/
-  background-color: white;
+  /*behavior: url(PIE.htc);
+  background-color: white;*/
 
 }
 
@@ -26,6 +26,10 @@
   align-items: center;
   justify-content: center;
   border: 1px lime solid;
+  color: lightcoral;
+  font-weight: 800;
+  text-align: center;
+  z-index: -1;
 }
 
 /*Ghost CSS rules here*/

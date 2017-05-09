@@ -28,7 +28,7 @@ class Tile extends Component {
               </div>
             </div>
           </div>
-          
+          {tileObject.index}
         </div>
       )
     }
@@ -36,14 +36,14 @@ class Tile extends Component {
       // console.log(this.props.player)
       return (
         <div className="tile-container">
-          <div className={tileObject.type + `--move-${player.direction}`}>
+          <div className={tileObject.type + `--move-${player.direction}`}>{tileObject.index}
           </div>
         </div>
       )
     }
     return (
       <div className="tile-container">
-        <div className={tileObject.type}></div>
+        <div className={tileObject.type}>{tileObject.index}</div>
       </div>
     )
   }
