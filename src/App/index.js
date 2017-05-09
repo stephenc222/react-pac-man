@@ -23,7 +23,8 @@ class App extends Component {
   constructor (props) {
     super(props)
 
-    this.playGame = this.playGame.bind(this)
+    this.startGame = this.startGame.bind(this)
+    this.nextLevel = this.nextLevel.bind(this)
     this.timer = this.timer.bind(this)
     this.drawPlayer = this.drawPlayer.bind(this)
     // this.moveGhost = this.moveGhost.bind(this)
@@ -174,7 +175,8 @@ class App extends Component {
   timer () {
     const time = this.state.time
     const gameState = this.state.gameState
-    if (gameState === 'START') {
+    if (gameState === 'START' || gameState === 'NEXTLEVEL') {
+      this.setState({time: 250})
       return
     }
     if (!time) {
@@ -400,12 +402,18 @@ class App extends Component {
   }
   movePlayerUp () {
     const player = {...this.state.player}
+    const level = this.state.level
     player.y--
     player.direction = 'up'
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10)
+
+    if (player.score > 5 && level !== 1) {
+      this.setState({gameState:'NEXTLEVEL'})
+      return
+    }
     this.setState({player},this.redraw)
   }
 
@@ -446,15 +454,27 @@ class App extends Component {
     window.location.reload()
   }
 
-  playGame () {
+  startGame () {
     this.setState({gameState: 'PLAY'})
+  }
+
+  nextLevel () {
+    let level = this.state.level
+    // TODO: change how next level is set
+    // so player can keep score, or not
+    const player = {...this.state.player}
+    player.index = 81
+    player.score = 0
+    console.log('level:' ,level)
+    console.log('level++:' ,++level)
+    this.setState({player,gameState: 'PLAY', level})
   }
 
   renderGameState (gameState) {
 
     if (gameState === 'START') {
       return (
-        <div className={'game-screen'} onClick={this.playGame}>
+        <div className={'game-screen'} onClick={this.startGame}>
           START GAME
           <p className="text">Click to play!</p>
         </div>
@@ -465,6 +485,13 @@ class App extends Component {
           mazeContent={this.state.mazeContent}
           player={this.state.player}
         />
+      )
+    } else if (gameState === 'NEXTLEVEL' && this.state.level < 3) {
+      return (
+        <div className={'game-screen'} onClick={this.nextLevel}>
+          {`Level ${this.state.level + 1} Complete!`}
+          <p className="text">{`Click to play level ${this.state.level + 2}`}</p>
+        </div>
       )
     } else if (gameState === 'GAMEOVER') {
       return (
