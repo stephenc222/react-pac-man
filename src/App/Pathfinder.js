@@ -86,7 +86,6 @@ class Pathfinder {
   }
 
   isObstacle (index) {
-    console.log(this.state.map[index])
     return this.state.obstacles.indexOf(this.state.map[index]) !== -1
   }
 
@@ -125,10 +124,7 @@ class Pathfinder {
 
       if (neighborIndex >= 0 && neighborIndex < searchGraphSize) {
         const node = searchGraph[neighborIndex]
-        node.data.index === 96 && console.log(node.data)
         if (!this.isObstacle(node.data.index)) {
-          // console.log(node.data)
-          // node.data.id === 'X' && console.log(node)
           searchNode.neighbors.push(node)
         }
       }
@@ -170,11 +166,8 @@ class Pathfinder {
     const finalPath = closedList.slice()
       .reverse()
       .map(node => {
-        // console.log(node.data)
         return node.data.index
       })
-      // console.log("finalPath: ")
-      // console.log(finalPath)
     return finalPath
   }
 
@@ -187,8 +180,6 @@ class Pathfinder {
     openList.forEach(node => {
       if (node.distanceToTarget < shortestDistanceToTarget) {
         currentNode = node
-        // console.log("currentNode")
-        // console.log(currentNode.data)
         shortestDistanceToTarget = node.distanceToTarget
       }
     })
@@ -227,8 +218,6 @@ class Pathfinder {
 
       while (openList.length) {
         const currentNode = this.findBestNode()
-        // console.log("currentNode: ", currentNode.data)
-        // console.log(currentNode.distanceToTarget)
 
         if (!currentNode) {
           break

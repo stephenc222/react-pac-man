@@ -25,10 +25,13 @@ class App extends Component {
 
     this.playGame = this.playGame.bind(this)
     this.timer = this.timer.bind(this)
+    this.drawPlayer = this.drawPlayer.bind(this)
+    // this.moveGhost = this.moveGhost.bind(this)
     this.drawGhost = this.drawGhost.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+    this.onKeyUp = this.onKeyUp.bind(this)
     this.movePlayerUp = this.movePlayerUp.bind(this)
     this.movePlayerDown = this.movePlayerDown.bind(this)
     this.movePlayerLeft = this.movePlayerLeft.bind(this)
@@ -49,12 +52,23 @@ class App extends Component {
         invincible: false
       },
       ghost: {
-        x: 1,
-        y: 2,
-        canHurtPlayer: true
+        // x: 1,
+        // y: 2,
+        index: 81,
+        canHurtPlayer: true,
+        pathPos: 0,
+        paths: [
+          {start:81, end: 181}, // level 0
+          {start:81, end: 161}, // level 1
+          {start:81, end: 161}, // level 2
+        ],
+        path: [],
       },
       time: 250,
-      interval: '',
+      timerInterval: '',
+      isKeyDown: false,
+      drawPlayerInterval: '',
+      moveGhostInterval: '',
       biscuits: [],
       bigBiscuits: [
         { x: 1,  y:1 }, 
@@ -62,18 +76,47 @@ class App extends Component {
         { x: 1,  y:9 }, 
         { x: 18, y:9 }, 
       ],
+      level: 0,
       maze: [
-      'xxxxxxxxxxxxxxxxxxxx',    
-      'x         x        x',    
-      'x x xxxxx x  xxx x x',    
-      'x x     x xx     x x',    
-      'x xxx x x  xxx xxx x',    
-      'x     x x      x   x',    
-      'x xxx x x  xxx xxx x',    
-      'x x     xx x     x x',    
-      'x x xxx  x xxxxx x x',    
-      'x                  x',    
-      'xxxxxxxxxxxxxxxxxxxx',  
+        [
+          'xxxxxxxxxxxxxxxxxxxx',    
+          'x         x        x',    
+          'x x xxxxx x  xxx x x',    
+          'x x     x xx     x x',    
+          'x xxx x x  xxx xxx x',    
+          'x     x x      x   x',    
+          'x xxx x x  xxx xxx x',    
+          'x x     xx x     x x',    
+          'x x xxx  x xxxxx x x',    
+          'x                  x',    
+          'xxxxxxxxxxxxxxxxxxxx',  
+        ],
+        [
+          'xxxxxxxxxxxxxxxxxxxx',    
+          'x   x              x',    
+          'x x xxxxxx  xxx  x x',    
+          'x        x       x x',    
+          'xxxxx x        xxx x',    
+          'x      xxxxxxxx    x',    
+          'x xxx      xxx   x x',    
+          'x x    x x x     x x',    
+          'x x xxxx x xxxxx x x',    
+          'x      x           x',    
+          'xxxxxxxxxxxxxxxxxxxx',  
+        ],
+        [
+          'xxxxxxxxxxxxxxxxxxxx',    
+          'x        xx        x',    
+          'x x xx x     xxxxxxx',    
+          'x x       x        x',    
+          'x x  x x  xxxxx   xx',    
+          'x    x xx      x   x',    
+          'x xxxx     xxx xxx x',    
+          'x       xx       x x',    
+          'x x xxx    xxxxx x x',    
+          'x       xxxx       x',    
+          'xxxxxxxxxxxxxxxxxxxx',  
+        ]
       ]
     }
   }
@@ -85,12 +128,47 @@ class App extends Component {
 
   componentDidMount () {
     this.game.focus()
-    const interval = setInterval(this.timer, 1000)
-    this.setState({interval})
+    const timerInterval = setInterval(this.timer, 1000)
+    const drawPlayerInterval = setInterval(this.drawPlayer, 500)
+    // const moveGhostInterval = setInterval(this.moveGhost, 500)
+    // this.setState({timerInterval, drawPlayerInterval, moveGhostInterval})
+    this.setState({timerInterval, drawPlayerInterval})
   }
 
+  drawPlayer () {
+    const player = {...this.state.player}
+    player.direction === 'right' && this.movePlayerRight()
+    player.direction === 'left' && this.movePlayerLeft()
+    player.direction === 'up' && this.movePlayerUp()
+    player.direction === 'down' && this.movePlayerDown()
+    
+  }
+
+  // moveGhost () {
+  //   const ghost = {...this.state.ghost}
+  //   const level = this.state.level
+  //   if (ghost.pathPos < ghost.path.length - 1) {
+  //     // ghost.x = ghost.path[level][ghost.pathPos].x
+  //     // ghost.y = ghost.path[level][ghost.pathPos].y
+  //     let ghostTile = ghost.path[level][ghost.pathPos]
+  //     console.log(JSON.stringify(ghost.path[level][ghost.pathPos],null,2))            
+  //     ghost.x = ghostTile.x
+  //     ghost.x = ghostTile.y
+  //     ghost.pathPos++
+  //   } else {
+  //     ghost.pathPos = 0
+  //     ghost.path[level].reverse()
+  //     // console.log(JSON.stringify(ghost.path[level],null,2))       
+  //     // debugger   
+  //   }
+  //   this.setState({ghost})
+    
+  // }
+
   componentWillUnmount () {
-    clearInterval(this.state.interval);
+    clearInterval(this.state.timerInterval);
+    clearInterval(this.state.drawPlayerInterval);
+    // clearInterval(this.state.moveGhostInterval);
   }
 
   timer () {
@@ -101,7 +179,7 @@ class App extends Component {
     }
     if (!time) {
       console.log('time\'s up!')
-      clearInterval(this.state.interval)
+      clearInterval(this.state.timerInterval)
       this.setState({gameState: 'GAMEOVER'})
       return
     }
@@ -109,8 +187,8 @@ class App extends Component {
   }
 
   createTileType (x,y) {
-
-    const maze = this.state.maze.slice()
+    const level = this.state.level
+    const maze = this.state.maze[level].slice()
     const player = {...this.state.player}
     const bigBiscuits = this.state.bigBiscuits.slice()
     const chipToTileId = chip => {    
@@ -135,8 +213,8 @@ class App extends Component {
   }
 
   getTileType (x,y) {
-
-    const maze = this.state.maze.slice()
+    const level = this.state.level
+    const maze = this.state.maze[level].slice()
     const player = {...this.state.player}
     const bigBiscuits = this.state.bigBiscuits.slice()
     const biscuits = this.state.biscuits.slice()
@@ -164,6 +242,7 @@ class App extends Component {
   }
 
   onKeyDown (event) {
+    const isKeyDown = this.state.isKeyDown
     const {
       // altKey,
       // ctrlKey,
@@ -183,6 +262,10 @@ class App extends Component {
     const movePlayerLeft = this.movePlayerLeft
     const movePlayerRight = this.movePlayerRight
 
+    if (isKeyDown) {
+      return
+    }
+
     if (keyCode === KEY.UP) {
       movePlayerUp()
     } else if (keyCode === KEY.DOWN) {
@@ -192,13 +275,24 @@ class App extends Component {
     } else if (keyCode === KEY.RIGHT) {
       movePlayerRight()
     }
+
+    this.setState((prevState) => {
+      const isKeyDown = true
+      return {isKeyDown}
+    })
   }
 
-  drawGhost (x,y) {
+  onKeyUp (event) {
+    this.setState({isKeyDown: false})
+  }
 
-    const ghost = {...this.state.ghost}
-
-    if ( x === ghost.x && y === ghost.y) {
+  drawGhost (ghost,x,y, index) {
+    // console.log(index)
+    // console.log(ghost.path)
+    // if ( x === ghost.x && y === ghost.y) {
+    if (index === ghost.index) {
+      // ghost.pathPos++
+      // this.setState({ghost})
       return true
     } else {
       return false
@@ -206,20 +300,42 @@ class App extends Component {
     
   }
 
-
   redraw () {
     const mazeContent = []
     const biscuits = []
     const bigBiscuits = []
+    const ghost = {...this.state.ghost}
+    // const level = this.state.level
+
+    // TODO: Here - logic for controlling next x and y
+    // ghost.x = ghost.path[0][0].x
+    // ghost.y = ghost.path[0][0].y++
+    // for (let index in ghost.path) {
+    //   // console.log(index)
+    //   // console.log(ghost.path)
+    // }
+    // console.log(ghost.path)
+    // console.log(ghost.pathPos)
+    if (ghost.pathPos < ghost.path.length - 1) {
+      // console.log(ghost.path)
+      ghost.index = ghost.path[ghost.pathPos]
+      ghost.pathPos++
+    } else {
+      ghost.pathPos = 0
+      ghost.path.reverse()
+    }
+
+  
 
     let x = 0
     let y = 0
-
+    let index = 0
     while (mazeContent.length < MAZE_HEIGHT) {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost(x,y)}
+        // let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost( x,y, ghost index), index: index++}
+        let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost(ghost, x,y,index), index: index++}
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         tile.type === 'biscuit--big' && bigBiscuits.push(tile)
@@ -227,14 +343,15 @@ class App extends Component {
       }
       ++y
     }
-
-    this.setState({mazeContent, biscuits, bigBiscuits})
+    this.setState({mazeContent, biscuits, bigBiscuits, ghost})
   }
 
   draw () {
     const mazeContent = []
     const biscuits = []
-    const maze = this.state.maze.slice()
+    const level = this.state.level
+    const maze = this.state.maze[level].slice()
+    const ghost = {...this.state.ghost}
 
     let x = 0
     let y = 0
@@ -246,7 +363,7 @@ class App extends Component {
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
         // let tile = {x,y, type: this.createTileType(x,y)}
-        let tile = {x,y, type: this.createTileType(x,y), ghostHere: this.drawGhost(x,y), index: index++}        
+        let tile = {x,y, type: this.createTileType(x,y), ghostHere: this.drawGhost(ghost, x,y, index), index: index++}        
         // tile.type !== 'wall' && (tile.index = index++)
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
@@ -255,28 +372,31 @@ class App extends Component {
       ++y
     }
 
-    let tempArr = []
+    let maze1D = []
     // console.log(maze)
 
     for (let row in maze) {
-      tempArr = tempArr.concat(maze[row].split(''))
+      maze1D = maze1D.concat(maze[row].split(''))
     }
 
-    console.log(tempArr)
+    // console.log(maze1D)
 
     // const obstacles = ['X']
     const obstacles = ['x']
 
     // create the path finder object
-    const finder = new Pathfinder(20, 11, tempArr, obstacles)
+    const finder = new Pathfinder(20, 11, maze1D, obstacles)
     // console.log(finder)
 
     // searchPath will contain a list of index values which follow the path found
     // or an empty list if no path can be found
-    const searchPath = finder.findPath(61, 116)
-    console.log(searchPath)
+    // const searchPath = finder.findPath(61, 116)
+    // console.log(searchPath)
 
-    this.setState({mazeContent, biscuits})
+    ghost.path = finder.findPath(ghost.paths[level].start, ghost.paths[level].end)
+
+    // console.log(ghost.path)
+    this.setState({mazeContent, biscuits, ghost})
   }
   movePlayerUp () {
     const player = {...this.state.player}
@@ -363,6 +483,7 @@ class App extends Component {
         className="game-container" 
         tabIndex={0}
         onKeyDown={this.onKeyDown}
+        onKeyUp={this.onKeyUp}
         ref={(element) => {this.game = element}}>
         <div className={`game-title`}>REACT PAC-MAN</div>
         <div className="hud-container">
