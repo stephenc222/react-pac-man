@@ -10,7 +10,7 @@ class Tile extends Component {
       return (
         <div className="tile-container">
           <div className="no-flex">
-            <div className={`ghost ${tileObject.ghostName}`}>
+            <div className={`ghost ${tileObject.ghostName}${player.invincible ? '--vulnerable': ''}`}>
               <div className="eyes">
                 <div className="eye_lt">
                   <div className="ball"></div>

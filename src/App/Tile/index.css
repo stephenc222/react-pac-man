@@ -91,11 +91,27 @@
 .blinky .bottom .frill {
   background: red;
 }
+.blinky--vulnerable {
+  /*background: red;*/
+  background: lime;
+}
+.blinky--vulnerable .bottom .frill {
+  /*background: red;*/
+  background: lime;
+}
 .pinky {
   background: pink;
 }
 .pinky .bottom .frill {
   background: pink;
+}
+.pinky--vulnerable {
+  /*background: pink;*/
+  background: lime;
+}
+.pinky--vulnerable .bottom .frill {
+  /*background: pink;*/
+  background: lime;
 }
 .inky {
   background: turquoise;
@@ -103,11 +119,27 @@
 .inky .bottom .frill {
   background: turquoise;
 }
+.inky--vulnerable {
+  /*background: turquoise;*/
+  background: lime;
+}
+.inky--vulnerable .bottom .frill {
+  /*background: turquoise;*/
+  background: lime;
+}
 .clyde {
   background: orange;
 }
 .clyde .bottom .frill {
   background: orange;
+}
+.clyde--vulnerable {
+  /*background: orange;*/
+  background: lime;
+}
+.clyde--vulnerable .bottom .frill {
+  /*background: orange;*/
+  background: lime;
 }
 
 
