@@ -1,10 +1,10 @@
 .biscuit {
-  /*height: 5px;
+  height: 5px;
   width: 5px;
   border: green 1px solid;
   border-radius: 50%;
-  /*behavior: url(PIE.htc);
-  background-color: white;*/
+  /*behavior: url(PIE.htc);*/
+  background-color: white;
 
 }
 
@@ -36,17 +36,14 @@
 .no-flex {
   height: inherit;
   width: inherit;
-  /*border: 1px solid yellow;*/
 }
 
 .ghost {
   margin: 2px 6px;
   width: 25px;
   height: 25px;
-/*   border: 1px solid limegreen; */
   float: left;
   position: relative;
-/*   background-color: darkgreen; */
   border-radius: 12.5px 12.5px 0 0;
 }
 .ghost .eyes {
@@ -59,7 +56,6 @@
   width: 6px;
   height: 6px;
   margin: 1px;
-/*   border: 1px solid limegreen; */
   float: left;
   background: #ffffff;
   border-radius: 50%;
@@ -100,36 +96,42 @@
 .wall {
   height: 30px;
   width: 30px;
-  /*border: tomato 1px solid;*/
   background-color: blue;
 }
+
 
 .player--move-up {
   height: 30px;
   width: 30px;
   border-radius: 50%;  
-  /*border: tomato 1px solid;*/
-  /*background-color: yellow;*/
-  /*background-color: yellow;*/
   background-image:
     linear-gradient(135deg, transparent 50%, yellow 50%),
     linear-gradient(45deg, yellow 50%, transparent 50%);
-    /*linear-gradient(135deg, transparent 50%, green 50%),
-    linear-gradient(45deg, red 50%, transparent 50%);*/
+}
+.player--move-up--invincible {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;  
+  background-image:
+    linear-gradient(135deg, transparent 50%, lime 50%),
+    linear-gradient(45deg, lime 50%, transparent 50%);
 }
 
 .player--move-down {
   height: 30px;
   width: 30px;
   border-radius: 50%;  
-  /*border: tomato 1px solid;*/
-  /*background-color: yellow;*/
-  /*background-color: yellow;*/
   background-image:
     linear-gradient(45deg, transparent 50%, yellow 50%),
     linear-gradient(135deg, yellow 50%, transparent 50%);
-    /*linear-gradient(45deg, transparent 50%, green 50%),
-    linear-gradient(135deg, red 50%, transparent 50%);*/
+}
+.player--move-down--invincible {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;  
+  background-image:
+    linear-gradient(45deg, transparent 50%, lime 50%),
+    linear-gradient(135deg, lime 50%, transparent 50%);
 }
 
 .player--move-left {
@@ -141,18 +143,32 @@
     linear-gradient(135deg, transparent 50%, yellow 50%),
     linear-gradient(225deg, yellow 50%, transparent 50%);        
 }
+.player--move-left--invincible {
+  display: flex;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%; 
+  background-image:
+    linear-gradient(135deg, transparent 50%, lime 50%),
+    linear-gradient(225deg, lime 50%, transparent 50%);        
+}
 
 .player--move-right {
   display:flex;
   height: 30px;
   width: 30px;
   border-radius: 50%;  
-  /*border: tomato 1px solid;*/
-  /*background-color: yellow;*/
-  /*background-color: yellow;*/
   background-image:
     linear-gradient(225deg, transparent 50%, yellow 50%),
     linear-gradient(135deg, yellow 50%, transparent 50%);        
-    /*linear-gradient(225deg, transparent 50%, green 50%),
-    linear-gradient(135deg, red 50%, transparent 50%);*/
+}
+
+.player--move-right--invincible {
+  display:flex;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;  
+  background-image:
+    linear-gradient(225deg, transparent 50%, lime 50%),
+    linear-gradient(135deg, lime 50%, transparent 50%);        
 }

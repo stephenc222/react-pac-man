@@ -8,15 +8,10 @@ const MAZE_WIDTH = 20
 const MAZE_HEIGHT = 11
 
 const KEY = {
-  // END: 35,
-  // HOME: 36,
   LEFT: 37,
   RIGHT: 39,
   UP: 38,
   DOWN: 40,
-  // BACKSPACE: 8,
-  // DELETE: 46,
-  // ENTER: 13
 }
 
 class App extends Component {
@@ -27,7 +22,6 @@ class App extends Component {
     this.nextLevel = this.nextLevel.bind(this)
     this.timer = this.timer.bind(this)
     this.drawPlayer = this.drawPlayer.bind(this)
-    // this.moveGhost = this.moveGhost.bind(this)
     this.drawGhost = this.drawGhost.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
@@ -41,8 +35,9 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      // gameState: 'START',
-      gameState: 'PLAY',
+      // TODO: put back to start when dev is done
+      gameState: 'START',
+      // gameState: 'PLAY',
       player: {
         x: 1,
         y: 5,
@@ -50,13 +45,11 @@ class App extends Component {
         direction: 'left',
         score: 0,
         lives: 3,
+        // invincible: true
         invincible: false
       },
       ghost: {
-        // x: 1,
-        // y: 2,
         index: 81,
-        canHurtPlayer: true,
         pathPos: 0,
         paths: [
           {start:81, end: 181}, // level 0
@@ -123,7 +116,6 @@ class App extends Component {
   }
 
   componentWillMount () {
-    // this.setState({gameState:'PLAY'})
     this.draw()
   }
 
@@ -131,8 +123,6 @@ class App extends Component {
     this.game.focus()
     const timerInterval = setInterval(this.timer, 1000)
     const drawPlayerInterval = setInterval(this.drawPlayer, 500)
-    // const moveGhostInterval = setInterval(this.moveGhost, 500)
-    // this.setState({timerInterval, drawPlayerInterval, moveGhostInterval})
     this.setState({timerInterval, drawPlayerInterval})
   }
 
@@ -145,31 +135,9 @@ class App extends Component {
     
   }
 
-  // moveGhost () {
-  //   const ghost = {...this.state.ghost}
-  //   const level = this.state.level
-  //   if (ghost.pathPos < ghost.path.length - 1) {
-  //     // ghost.x = ghost.path[level][ghost.pathPos].x
-  //     // ghost.y = ghost.path[level][ghost.pathPos].y
-  //     let ghostTile = ghost.path[level][ghost.pathPos]
-  //     console.log(JSON.stringify(ghost.path[level][ghost.pathPos],null,2))            
-  //     ghost.x = ghostTile.x
-  //     ghost.x = ghostTile.y
-  //     ghost.pathPos++
-  //   } else {
-  //     ghost.pathPos = 0
-  //     ghost.path[level].reverse()
-  //     // console.log(JSON.stringify(ghost.path[level],null,2))       
-  //     // debugger   
-  //   }
-  //   this.setState({ghost})
-    
-  // }
-
   componentWillUnmount () {
     clearInterval(this.state.timerInterval);
     clearInterval(this.state.drawPlayerInterval);
-    // clearInterval(this.state.moveGhostInterval);
   }
 
   timer () {
@@ -289,12 +257,30 @@ class App extends Component {
   }
 
   drawGhost (ghost,x,y, index) {
-    // console.log(index)
-    // console.log(ghost.path)
-    // if ( x === ghost.x && y === ghost.y) {
+    const player = {...this.state.player}
+
+    if (x === player.x && y === player.y && index === ghost.index) {
+      if (!player.invincible) {
+        player.lives--
+        this.setState({player})
+        if (player.lives === 0) {
+          this.setState({gameState: 'GAMEOVER'})
+          return false       
+        } 
+
+        console.log('player was hit')
+      } else {
+        console.log('player invincible and scored hit')
+        player.score += 20
+        ghost.path = []
+        ghost.index = 300
+        this.setState({player, ghost})
+        return false
+      }
+    }
+
+    
     if (index === ghost.index) {
-      // ghost.pathPos++
-      // this.setState({ghost})
       return true
     } else {
       return false
@@ -307,6 +293,11 @@ class App extends Component {
     const biscuits = []
     const bigBiscuits = []
     const ghost = {...this.state.ghost}
+    const gameState = this.state.gameState
+
+    if (gameState === 'START') {
+      return
+    }
     // const level = this.state.level
 
     // TODO: Here - logic for controlling next x and y
@@ -364,9 +355,7 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        // let tile = {x,y, type: this.createTileType(x,y)}
         let tile = {x,y, type: this.createTileType(x,y), ghostHere: this.drawGhost(ghost, x,y, index), index: index++}        
-        // tile.type !== 'wall' && (tile.index = index++)
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         ++x
@@ -375,42 +364,29 @@ class App extends Component {
     }
 
     let maze1D = []
-    // console.log(maze)
 
     for (let row in maze) {
       maze1D = maze1D.concat(maze[row].split(''))
     }
 
-    // console.log(maze1D)
-
-    // const obstacles = ['X']
     const obstacles = ['x']
-
     // create the path finder object
     const finder = new Pathfinder(20, 11, maze1D, obstacles)
-    // console.log(finder)
-
-    // searchPath will contain a list of index values which follow the path found
-    // or an empty list if no path can be found
-    // const searchPath = finder.findPath(61, 116)
-    // console.log(searchPath)
-
     ghost.path = finder.findPath(ghost.paths[level].start, ghost.paths[level].end)
 
-    // console.log(ghost.path)
     this.setState({mazeContent, biscuits, ghost})
   }
   movePlayerUp () {
     const player = {...this.state.player}
-    const level = this.state.level
+    const biscuits = this.state.biscuits.slice()
     player.y--
     player.direction = 'up'
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10)
-
-    if (player.score > 5 && level !== 1) {
+    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -419,34 +395,52 @@ class App extends Component {
 
   movePlayerDown () {
     const player = {...this.state.player}
+    const biscuits = this.state.biscuits.slice()    
     player.y++
     player.direction = 'down'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10)
+    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
+      this.setState({gameState:'NEXTLEVEL'})
+      return
+    }
     this.setState({player},this.redraw)
   }
 
   movePlayerLeft () {
     const player = {...this.state.player}
+    const biscuits = this.state.biscuits.slice()
     player.x--
     player.direction = 'left'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10)
+    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
+      this.setState({gameState:'NEXTLEVEL'})
+      return
+    }
     this.setState({player},this.redraw)
   }
 
   movePlayerRight () {
     const player = {...this.state.player}
+    const biscuits = this.state.biscuits.slice()
     player.x++
     player.direction = 'right'    
     const result = this.getTileType(player.x,player.y)  
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10)
+    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {      
+      this.setState({gameState:'NEXTLEVEL'})
+      return
+    }
     this.setState({player},this.redraw)
   }
 
@@ -460,14 +454,18 @@ class App extends Component {
 
   nextLevel () {
     let level = this.state.level
-    // TODO: change how next level is set
-    // so player can keep score, or not
     const player = {...this.state.player}
-    player.index = 81
+
+    player.x = 10
+    player.y = 2
+
     player.score = 0
-    console.log('level:' ,level)
-    console.log('level++:' ,++level)
-    this.setState({player,gameState: 'PLAY', level})
+    player.lives = 3
+
+    player.invincible = false
+
+    this.setState({gameState: 'PLAY',level: ++level, player}, this.draw)
+    return
   }
 
   renderGameState (gameState) {
@@ -486,18 +484,27 @@ class App extends Component {
           player={this.state.player}
         />
       )
-    } else if (gameState === 'NEXTLEVEL' && this.state.level < 3) {
+    } else if (gameState === 'NEXTLEVEL' && this.state.level < 2) {
       return (
         <div className={'game-screen'} onClick={this.nextLevel}>
           {`Level ${this.state.level + 1} Complete!`}
           <p className="text">{`Click to play level ${this.state.level + 2}`}</p>
         </div>
       )
+    } else if (gameState === 'NEXTLEVEL' && this.state.level === 2) {
+      return (
+        <div className={'game-screen'} onClick={this.reloadGame}>
+          GAME WON
+          <p className="text">Good job, you beat the game! Click to play again!</p>
+        </div>
+      )
     } else if (gameState === 'GAMEOVER') {
+      clearInterval(this.state.timerInterval);
+      clearInterval(this.state.drawPlayerInterval);
       return (
         <div className={'game-screen'} onClick={this.reloadGame}>
           GAME OVER
-          <p className="text">Click to play again!</p>
+          <p className="text">Better luck next time. Click to play again!</p>
         </div>
       )
     }

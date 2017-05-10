@@ -3,7 +3,6 @@ import './index.css'
 
 class Tile extends Component {
   render () {
-    // console.log(this.props.tileObject)
     const tileObject = this.props.tileObject
     const player = this.props.player
 
@@ -28,22 +27,23 @@ class Tile extends Component {
               </div>
             </div>
           </div>
-          {tileObject.index}
+          {/*tileObject.index*/}
         </div>
       )
     }
     if (tileObject.type === 'player') {
-      // console.log(this.props.player)
       return (
         <div className="tile-container">
-          <div className={tileObject.type + `--move-${player.direction}`}>{tileObject.index}
+          <div className={
+            tileObject.type + `--move-${player.direction}${player.invincible ? '--invincible': ''}`
+          }>{/*tileObject.index*/}
           </div>
         </div>
       )
     }
     return (
       <div className="tile-container">
-        <div className={tileObject.type}>{tileObject.index}</div>
+        <div className={tileObject.type}>{/*tileObject.index*/}</div>
       </div>
     )
   }
