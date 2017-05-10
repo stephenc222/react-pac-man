@@ -41,7 +41,7 @@ class App extends Component {
       // gameState: 'PLAY',
       player: {
         x: 1,
-        y: 5,
+        y: 3,
         // direction: 'right',
         direction: 'left',
         score: 0,
@@ -180,7 +180,6 @@ class App extends Component {
       return
     }
     if (!time) {
-      console.log('time\'s up!')
       clearInterval(this.state.timerInterval)
       this.setState({gameState: 'GAMEOVER'})
       return
@@ -300,9 +299,7 @@ class App extends Component {
           return false       
         } 
 
-        console.log('player was hit')
       } else {
-        console.log('player invincible and scored hit')
         player.score += 20
         blinky.path = []
         blinky.index = 300
@@ -319,9 +316,7 @@ class App extends Component {
           return false       
         } 
 
-        console.log('player was hit')
       } else {
-        console.log('player invincible and scored hit')
         player.score += 20
         Pinky.path = []
         Pinky.index = 300
@@ -338,9 +333,7 @@ class App extends Component {
           return false       
         } 
 
-        console.log('player was hit')
       } else {
-        console.log('player invincible and scored hit')
         player.score += 20
         Inky.path = []
         Inky.index = 300
@@ -357,9 +350,7 @@ class App extends Component {
           return false       
         } 
 
-        console.log('player was hit')
       } else {
-        console.log('player invincible and scored hit')
         player.score += 20
         Clyde.path = []
         Clyde.index = 300
@@ -409,7 +400,6 @@ class App extends Component {
     }
 
     if (blinky.pathPos < blinky.path.length - 1) {
-      // console.log(blinky.path)
       blinky.index = blinky.path[blinky.pathPos]
       blinky.pathPos++
     } else {
@@ -417,7 +407,6 @@ class App extends Component {
       blinky.path.reverse()
     }
     if (Pinky.pathPos < Pinky.path.length - 1) {
-      // console.log(Pinky.path)
       Pinky.index = Pinky.path[Pinky.pathPos]
       Pinky.pathPos++
     } else {
@@ -425,7 +414,6 @@ class App extends Component {
       Pinky.path.reverse()
     }
     if (Inky.pathPos < Inky.path.length - 1) {
-      // console.log(Inky.path)
       Inky.index = Inky.path[Inky.pathPos]
       Inky.pathPos++
     } else {
@@ -433,7 +421,6 @@ class App extends Component {
       Inky.path.reverse()
     }
     if (Clyde.pathPos < Clyde.path.length - 1) {
-      // console.log(Clyde.path)
       Clyde.index = Clyde.path[Clyde.pathPos]
       Clyde.pathPos++
     } else {
@@ -450,7 +437,6 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        // let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost( x,y, blinky index), index: index++}
         let tile = {
           x,y, 
           type: this.getTileType(x,y), 
@@ -471,13 +457,18 @@ class App extends Component {
   draw () {
     const mazeContent = []
     const biscuits = []
+    const bigBiscuits = [
+        { x: 1,  y:1 }, 
+        { x: 18, y:1 }, 
+        { x: 1,  y:9 }, 
+        { x: 18, y:9 }, 
+      ]
     const level = this.state.level
     const maze = this.state.maze[level].slice()
     const blinky = {...this.state.blinky}
     const Pinky = {...this.state.Pinky}
     const Inky = {...this.state.Inky}
     const Clyde = {...this.state.Clyde}
-    // const gameState = this.state.gameState
 
     let x = 0
     let y = 0
@@ -509,14 +500,13 @@ class App extends Component {
     }
 
     const obstacles = ['x']
-    // create the path finder object
     const finder = new Pathfinder(20, 11, maze1D, obstacles)
     blinky.path = finder.findPath(blinky.paths[level].start, blinky.paths[level].end)
     Pinky.path = finder.findPath(Pinky.paths[level].start, Pinky.paths[level].end)
     Inky.path = finder.findPath(Inky.paths[level].start, Inky.paths[level].end)
     Clyde.path = finder.findPath(Clyde.paths[level].start, Clyde.paths[level].end)
 
-    this.setState({mazeContent, biscuits, blinky, Pinky, Inky, Clyde})
+    this.setState({mazeContent, biscuits, bigBiscuits,blinky, Pinky, Inky, Clyde})
   }
   movePlayerUp () {
     const player = {...this.state.player}
@@ -527,8 +517,8 @@ class App extends Component {
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    if (biscuits.length <= 95) {
-    // if (!biscuits.length) {
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -544,8 +534,8 @@ class App extends Component {
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    if (biscuits.length <= 95) {
-    // if (!biscuits.length) {
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -561,8 +551,8 @@ class App extends Component {
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    if (biscuits.length <= 95) {
-    // if (!biscuits.length) {
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -578,8 +568,8 @@ class App extends Component {
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    if (biscuits.length <= 95) {
-    // if (!biscuits.length) {      
+    // if (biscuits.length <= 95) {
+    if (!biscuits.length) {      
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -617,6 +607,8 @@ class App extends Component {
         <div className={'game-screen'} onClick={this.startGame}>
           START GAME
           <p className="text">Click to play!</p>
+          <br/>
+          <p className="text">Use the arrow keys to move</p>
         </div>
       )
     } else if (gameState === 'PLAY') {
