@@ -91,6 +91,24 @@
 .blinky .bottom .frill {
   background: red;
 }
+.pinky {
+  background: pink;
+}
+.pinky .bottom .frill {
+  background: pink;
+}
+.inky {
+  background: turquoise;
+}
+.inky .bottom .frill {
+  background: turquoise;
+}
+.clyde {
+  background: orange;
+}
+.clyde .bottom .frill {
+  background: orange;
+}
 
 
 .wall {

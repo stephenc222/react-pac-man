@@ -23,6 +23,7 @@ class App extends Component {
     this.timer = this.timer.bind(this)
     this.drawPlayer = this.drawPlayer.bind(this)
     this.drawGhost = this.drawGhost.bind(this)
+    this.getGhostName = this.getGhostName.bind(this)
     this.getTileType = this.getTileType.bind(this)
     this.createTileType = this.createTileType.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
@@ -48,13 +49,43 @@ class App extends Component {
         // invincible: true
         invincible: false
       },
-      ghost: {
+      blinky: {
         index: 81,
         pathPos: 0,
         paths: [
           {start:81, end: 181}, // level 0
           {start:81, end: 161}, // level 1
           {start:81, end: 161}, // level 2
+        ],
+        path: [],
+      },
+      Pinky: {
+        index: 198,
+        pathPos: 0,
+        paths: [
+          {start:198, end: 191}, // level 0
+          {start:126, end: 190}, // level 1
+          {start:192, end: 118}, // level 2
+        ],
+        path: [],
+      },
+      Inky: {
+        index: 38,
+        pathPos: 0,
+        paths: [
+          {start:38, end: 74}, // level 0
+          {start:32, end: 38}, // level 1
+          {start:28, end: 168}, // level 2
+        ],
+        path: [],
+      },
+      Clyde: {
+        index: 29,
+        pathPos: 0,
+        paths: [
+          {start:29, end: 150}, // level 0
+          {start:198, end: 194}, // level 1
+          {start:75, end: 35}, // level 2
         ],
         path: [],
       },
@@ -71,6 +102,7 @@ class App extends Component {
         { x: 18, y:9 }, 
       ],
       level: 0,
+      mazeContent: [],
       maze: [
         [
           'xxxxxxxxxxxxxxxxxxxx',    
@@ -256,10 +288,10 @@ class App extends Component {
     this.setState({isKeyDown: false})
   }
 
-  drawGhost (ghost,x,y, index) {
+  drawGhost (blinky, Pinky, Inky, Clyde,x,y, index) {
     const player = {...this.state.player}
 
-    if (x === player.x && y === player.y && index === ghost.index) {
+    if (x === player.x && y === player.y && index === blinky.index) {
       if (!player.invincible) {
         player.lives--
         this.setState({player})
@@ -272,15 +304,74 @@ class App extends Component {
       } else {
         console.log('player invincible and scored hit')
         player.score += 20
-        ghost.path = []
-        ghost.index = 300
-        this.setState({player, ghost})
+        blinky.path = []
+        blinky.index = 300
+        this.setState({player, blinky})
         return false
       }
     }
+    if (x === player.x && y === player.y && index === Pinky.index) {
+      if (!player.invincible) {
+        player.lives--
+        this.setState({player})
+        if (player.lives === 0) {
+          this.setState({gameState: 'GAMEOVER'})
+          return false       
+        } 
 
+        console.log('player was hit')
+      } else {
+        console.log('player invincible and scored hit')
+        player.score += 20
+        Pinky.path = []
+        Pinky.index = 300
+        this.setState({player, Pinky})
+        return false
+      }
+    }
+    if (x === player.x && y === player.y && index === Inky.index) {
+      if (!player.invincible) {
+        player.lives--
+        this.setState({player})
+        if (player.lives === 0) {
+          this.setState({gameState: 'GAMEOVER'})
+          return false       
+        } 
+
+        console.log('player was hit')
+      } else {
+        console.log('player invincible and scored hit')
+        player.score += 20
+        Inky.path = []
+        Inky.index = 300
+        this.setState({player, Inky})
+        return false
+      }
+    }
+    if (x === player.x && y === player.y && index === Clyde.index) {
+      if (!player.invincible) {
+        player.lives--
+        this.setState({player})
+        if (player.lives === 0) {
+          this.setState({gameState: 'GAMEOVER'})
+          return false       
+        } 
+
+        console.log('player was hit')
+      } else {
+        console.log('player invincible and scored hit')
+        player.score += 20
+        Clyde.path = []
+        Clyde.index = 300
+        this.setState({player, Clyde})
+        return false
+      }
+    }
     
-    if (index === ghost.index) {
+    if (index === blinky.index 
+      || index === Pinky.index 
+      || index === Inky.index 
+      || index === Clyde.index) {
       return true
     } else {
       return false
@@ -288,34 +379,66 @@ class App extends Component {
     
   }
 
+  getGhostName(blinky,Pinky,Inky,Clyde,index) {
+    if(blinky.index === index) {
+      return 'blinky'
+    } else if(Pinky.index === index) {
+      return 'pinky'
+    } else if(Inky.index === index) {
+      return 'inky'
+    } else if(Clyde.index === index) {
+      return 'clyde'
+    } else {
+      return null
+    }
+
+  }
+
   redraw () {
     const mazeContent = []
     const biscuits = []
     const bigBiscuits = []
-    const ghost = {...this.state.ghost}
+    const blinky = {...this.state.blinky}
+    const Pinky = {...this.state.Pinky}
+    const Inky = {...this.state.Inky}
+    const Clyde = {...this.state.Clyde}
     const gameState = this.state.gameState
 
     if (gameState === 'START') {
       return
     }
-    // const level = this.state.level
 
-    // TODO: Here - logic for controlling next x and y
-    // ghost.x = ghost.path[0][0].x
-    // ghost.y = ghost.path[0][0].y++
-    // for (let index in ghost.path) {
-    //   // console.log(index)
-    //   // console.log(ghost.path)
-    // }
-    // console.log(ghost.path)
-    // console.log(ghost.pathPos)
-    if (ghost.pathPos < ghost.path.length - 1) {
-      // console.log(ghost.path)
-      ghost.index = ghost.path[ghost.pathPos]
-      ghost.pathPos++
+    if (blinky.pathPos < blinky.path.length - 1) {
+      // console.log(blinky.path)
+      blinky.index = blinky.path[blinky.pathPos]
+      blinky.pathPos++
     } else {
-      ghost.pathPos = 0
-      ghost.path.reverse()
+      blinky.pathPos = 0
+      blinky.path.reverse()
+    }
+    if (Pinky.pathPos < Pinky.path.length - 1) {
+      // console.log(Pinky.path)
+      Pinky.index = Pinky.path[Pinky.pathPos]
+      Pinky.pathPos++
+    } else {
+      Pinky.pathPos = 0
+      Pinky.path.reverse()
+    }
+    if (Inky.pathPos < Inky.path.length - 1) {
+      // console.log(Inky.path)
+      Inky.index = Inky.path[Inky.pathPos]
+      Inky.pathPos++
+    } else {
+      Inky.pathPos = 0
+      Inky.path.reverse()
+    }
+    if (Clyde.pathPos < Clyde.path.length - 1) {
+      // console.log(Clyde.path)
+      Clyde.index = Clyde.path[Clyde.pathPos]
+      Clyde.pathPos++
+    } else {
+      Clyde.pathPos = 0
+      Clyde.path.reverse()
     }
 
   
@@ -327,8 +450,14 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        // let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost( x,y, ghost index), index: index++}
-        let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost(ghost, x,y,index), index: index++}
+        // let tile = {x,y, type: this.getTileType(x,y), ghostHere: this.drawGhost( x,y, blinky index), index: index++}
+        let tile = {
+          x,y, 
+          type: this.getTileType(x,y), 
+          ghostHere: this.drawGhost(blinky, Pinky, Inky, Clyde, x,y,index), 
+          ghostName: this.getGhostName(blinky,Pinky,Inky,Clyde,index),
+          index: index++
+        }
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         tile.type === 'biscuit--big' && bigBiscuits.push(tile)
@@ -336,7 +465,7 @@ class App extends Component {
       }
       ++y
     }
-    this.setState({mazeContent, biscuits, bigBiscuits, ghost})
+    this.setState({mazeContent, biscuits, bigBiscuits, blinky, Pinky, Inky,Clyde})
   }
 
   draw () {
@@ -344,7 +473,11 @@ class App extends Component {
     const biscuits = []
     const level = this.state.level
     const maze = this.state.maze[level].slice()
-    const ghost = {...this.state.ghost}
+    const blinky = {...this.state.blinky}
+    const Pinky = {...this.state.Pinky}
+    const Inky = {...this.state.Inky}
+    const Clyde = {...this.state.Clyde}
+    // const gameState = this.state.gameState
 
     let x = 0
     let y = 0
@@ -355,7 +488,13 @@ class App extends Component {
       mazeContent[y] = []
       x = 0
       while (mazeContent[y].length < MAZE_WIDTH) {
-        let tile = {x,y, type: this.createTileType(x,y), ghostHere: this.drawGhost(ghost, x,y, index), index: index++}        
+        let tile = {
+          x,y, 
+          type: this.createTileType(x,y), 
+          ghostHere: this.drawGhost(blinky,Pinky,Inky,Clyde, x,y, index), 
+          ghostName: this.getGhostName(blinky,Pinky,Inky,Clyde,index),
+          index: index++
+        }        
         mazeContent[y].push(tile)
         tile.type === 'biscuit' && biscuits.push(tile)
         ++x
@@ -372,9 +511,12 @@ class App extends Component {
     const obstacles = ['x']
     // create the path finder object
     const finder = new Pathfinder(20, 11, maze1D, obstacles)
-    ghost.path = finder.findPath(ghost.paths[level].start, ghost.paths[level].end)
+    blinky.path = finder.findPath(blinky.paths[level].start, blinky.paths[level].end)
+    Pinky.path = finder.findPath(Pinky.paths[level].start, Pinky.paths[level].end)
+    Inky.path = finder.findPath(Inky.paths[level].start, Inky.paths[level].end)
+    Clyde.path = finder.findPath(Clyde.paths[level].start, Clyde.paths[level].end)
 
-    this.setState({mazeContent, biscuits, ghost})
+    this.setState({mazeContent, biscuits, blinky, Pinky, Inky, Clyde})
   }
   movePlayerUp () {
     const player = {...this.state.player}
@@ -385,8 +527,8 @@ class App extends Component {
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
-    if (!biscuits.length) {
+    if (biscuits.length <= 95) {
+    // if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -402,8 +544,8 @@ class App extends Component {
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
-    if (!biscuits.length) {
+    if (biscuits.length <= 95) {
+    // if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -419,8 +561,8 @@ class App extends Component {
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
-    if (!biscuits.length) {
+    if (biscuits.length <= 95) {
+    // if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
@@ -436,8 +578,8 @@ class App extends Component {
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
-    if (!biscuits.length) {      
+    if (biscuits.length <= 95) {
+    // if (!biscuits.length) {      
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
