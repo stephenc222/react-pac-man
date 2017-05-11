@@ -12,6 +12,18 @@
   /*flex-grow: 1;*/
 }
 
+.play-container {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid red;
+
+  /*flex-grow: 1;*/
+}
+
 .game-title {
   color: white;
 }

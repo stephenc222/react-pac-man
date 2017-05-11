@@ -3,6 +3,7 @@ import Maze from './Maze'
 import HUD from './HUD'
 import './index.css';
 import Pathfinder from './Pathfinder'
+import TouchControl from './TouchControl'
 
 const MAZE_WIDTH = 20
 const MAZE_HEIGHT = 11
@@ -243,6 +244,7 @@ class App extends Component {
   }
 
   onKeyDown (event) {
+    console.log('key is down!')
     const isKeyDown = this.state.isKeyDown
     const {
       // altKey,
@@ -613,10 +615,27 @@ class App extends Component {
       )
     } else if (gameState === 'PLAY') {
       return (
-        <Maze
-          mazeContent={this.state.mazeContent}
-          player={this.state.player}
-        />
+        <div className={'game-container'}>
+          <div className={`game-title`}>REACT PAC-MAN</div>        
+          <div className="hud-container">
+            <HUD
+              player={this.state.player}
+              time={this.state.time}
+            />
+          </div>
+          <div className="play-container">
+          <TouchControl
+            movePlayerUp={this.movePlayerUp}
+            movePlayerLeft={this.movePlayerLeft}
+            movePlayerRight={this.movePlayerRight}
+            movePlayerDown={this.movePlayerDown}
+          />
+          <Maze
+            mazeContent={this.state.mazeContent}
+            player={this.state.player}
+          />
+          </div>
+        </div>
       )
     } else if (gameState === 'NEXTLEVEL' && this.state.level < 2) {
       return (
@@ -652,14 +671,8 @@ class App extends Component {
         tabIndex={0}
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
+        onTouchStart={(e) => {return console.log(e.target)}}
         ref={(element) => {this.game = element}}>
-        <div className={`game-title`}>REACT PAC-MAN</div>
-        <div className="hud-container">
-          <HUD
-            player={this.state.player}
-            time={this.state.time}
-          />
-        </div>
         {this.renderGameState(this.state.gameState)}
       </div>
     );

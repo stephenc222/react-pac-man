@@ -1,0 +1,29 @@
+.touchControl-container {
+  border: 1px solid limegreen;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.left-and-right {
+  display: flex;
+  flex-direction: row;
+}
+.touch-left {
+  padding: 15px;
+  border: 1px solid coral;  
+}
+.touch-right {
+  padding: 15px;
+  border: 1px solid coral;  
+  
+}
+.touch-down {
+  padding: 15px;  
+  border: 1px solid coral;  
+  
+}
+.touch-up {
+  padding: 15px;
+  border: 1px solid coral;    
+}
