@@ -37,7 +37,6 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      // TODO: put back to start when dev is done
       gameState: 'START',
       // gameState: 'PLAY',
       player: {
