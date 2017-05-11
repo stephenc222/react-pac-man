@@ -47,6 +47,12 @@
     text-align: center;
     z-index: -1;
   }
+
+  .wall {
+    height: 30px;
+    width: 30px;
+    background-color: blue;
+  }
 }
 
 /*Ghost CSS rules here*/

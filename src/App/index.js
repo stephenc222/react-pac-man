@@ -37,16 +37,13 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      // gameState: 'START',
-      gameState: 'PLAY',
+      gameState: 'START',
       player: {
         x: 1,
         y: 3,
-        // direction: 'right',
         direction: 'left',
         score: 0,
         lives: 3,
-        // invincible: true
         invincible: false
       },
       blinky: {
