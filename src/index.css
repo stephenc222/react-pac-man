@@ -1,6 +1,13 @@
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  width: 100vw;
   font-family: sans-serif;
   background-color: #001a33;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
 }

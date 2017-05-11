@@ -8,7 +8,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10px;
+  /*padding: 10px;*/
+  height: 100%;
+  width: 100%;
   /*flex-grow: 1;*/
 }
 
@@ -16,12 +18,29 @@
   text-align: center;
   display: flex;
   flex-direction: row;
-  align-items: left;
+  align-items: center;
   justify-content: center;
-  padding: 10px;
+  /*padding: 10px;*/
   border: 1px solid red;
 
-  /*flex-grow: 1;*/
+  flex: 1;
+}
+
+.play-container--left {
+  border: 1px solid yellow;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+}
+
+.play-container--right {
+  /*border: 1px solid yellow;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .game-title {
@@ -35,6 +54,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .text {
@@ -42,13 +62,62 @@
   font-size: 14px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
+@media screen and (device-aspect-ratio: 375/667) {
 
-.App-intro {
-  font-size: large;
+  .text {
+    display: flex;
+    font-size: 12px;
+  }
+
+  .game-screen {
+    color: white;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .game-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .play-container {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /*padding: 10px;*/
+    border: 1px solid red;
+    height: 100%;
+    flex: 1;
+  }
+
+  .play-container--left {
+    border: 1px solid yellow;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+  }
+
+  .play-container--right {
+    /*border: 1px solid yellow;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .game-title {
+    color: white;
+  }
 }

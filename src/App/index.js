@@ -37,8 +37,8 @@ class App extends Component {
     this.draw = this.draw.bind(this)
 
     this.state = {
-      gameState: 'START',
-      // gameState: 'PLAY',
+      // gameState: 'START',
+      gameState: 'PLAY',
       player: {
         x: 1,
         y: 3,
@@ -623,16 +623,19 @@ class App extends Component {
             />
           </div>
           <div className="play-container">
-          <TouchControl
-            movePlayerUp={this.movePlayerUp}
-            movePlayerLeft={this.movePlayerLeft}
-            movePlayerRight={this.movePlayerRight}
-            movePlayerDown={this.movePlayerDown}
-          />
+          <div className="play-container--left">
+            <TouchControl
+              movePlayerUp={this.movePlayerUp}
+              movePlayerLeft={this.movePlayerLeft}
+              movePlayerRight={this.movePlayerRight}
+              movePlayerDown={this.movePlayerDown}
+            />
+          </div>
           <Maze
             mazeContent={this.state.mazeContent}
             player={this.state.player}
           />
+          <div className="play-container--right" ></div>
           </div>
         </div>
       )
