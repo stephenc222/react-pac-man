@@ -32,6 +32,23 @@
   z-index: -1;
 }
 
+@media screen and (device-aspect-ratio: 3/4) {
+  .tile-container {
+    display: flex;
+    background-color: darkcyan;
+    background-color: #001a33;
+    height: 35px;
+    width: 35px;
+    align-items: center;
+    justify-content: center;
+    border: 1px lime solid;
+    color: lightcoral;
+    font-weight: 800;
+    text-align: center;
+    z-index: -1;
+  }
+}
+
 /*Ghost CSS rules here*/
 .no-flex {
   height: inherit;
