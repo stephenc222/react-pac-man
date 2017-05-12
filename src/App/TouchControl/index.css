@@ -3,6 +3,7 @@
   color: white;
   display: flex;
   flex-direction: column;
+  visibility: hidden;
 }
 
 .left-and-right {
@@ -77,6 +78,8 @@
     color: white;
     display: flex;
     flex-direction: column;
+    visibility: visible;
+    
   }
 
   .left-and-right {

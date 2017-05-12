@@ -604,9 +604,11 @@ class App extends Component {
       return (
         <div className={'game-screen'} onClick={this.startGame}>
           START GAME
-          <p className="text">Click to play!</p>
+          <p className="text-web">Click to play!</p>
+          <p className="text-mobile">Press to play!</p>
           <br/>
-          <p className="text">Use the arrow keys to move</p>
+          <p className="text-web">Use the arrow keys to move</p>
+          <p className="text-mobile">Touch the arrow controls to move</p>
         </div>
       )
     } else if (gameState === 'PLAY') {

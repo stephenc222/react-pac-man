@@ -58,15 +58,24 @@
   flex-grow: 1;
 }
 
-.text {
+.text-web {
   display: flex;
+  font-size: 14px;
+}
+.text-mobile {
+  display: none;
   font-size: 14px;
 }
 
 @media screen and (device-aspect-ratio: 375/667) {
 
-  .text {
+  .text-mobile {
     display: flex;
+    font-size: 12px;
+  }
+
+  .text-web {
+    display: none;
     font-size: 12px;
   }
 
