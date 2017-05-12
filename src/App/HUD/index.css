@@ -3,6 +3,7 @@
 }
 .lives {
   color: white;
+  padding-right: 15px;  
 }
 .time {
   color: white;
@@ -12,4 +13,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.score-and-lives {
+  display: flex;
+  flex-direction: row;
 }

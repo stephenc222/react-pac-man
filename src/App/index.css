@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /*padding: 10px;*/
+  /*padding: 2px;*/
   height: 100%;
   width: 100%;
   /*flex-grow: 1;*/
@@ -21,13 +21,13 @@
   align-items: center;
   justify-content: center;
   /*padding: 10px;*/
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 
   flex: 1;
 }
 
 .play-container--left {
-  border: 1px solid yellow;
+  /*border: 1px solid yellow;*/
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -45,6 +45,7 @@
 
 .game-title {
   color: white;
+  /*padding: 5px;*/
 }
 
 .game-screen {
@@ -95,13 +96,13 @@
     align-items: center;
     justify-content: center;
     /*padding: 10px;*/
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     height: 100%;
     flex: 1;
   }
 
   .play-container--left {
-    border: 1px solid yellow;
+    /*border: 1px solid yellow;*/
     display: flex;
     flex-direction: column;
     justify-content: space-around;

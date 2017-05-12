@@ -8,8 +8,8 @@ class HUD extends Component {
     return (
       <div className="hud-data">
         <div className="score-and-lives">
-          <div className="score">{`SCORE: ${player.score}`}</div>
           <div className="lives">{`LIVES: ${player.lives}`}</div>
+          <div className="score">{`SCORE: ${player.score}`}</div>
         </div>
         <div className="time">{`TIME LEFT: ${time} SECONDS`}</div>
       </div>

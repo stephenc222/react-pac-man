@@ -1,5 +1,5 @@
 .touchControl-container {
-  border: 1px solid limegreen;
+  /*border: 1px solid limegreen;*/
   color: white;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@
 
 @media screen and (device-aspect-ratio: 375/667) {
   .touchControl-container {
-    border: 1px solid limegreen;
+    /*border: 1px solid limegreen;*/
     color: white;
     display: flex;
     flex-direction: column;
