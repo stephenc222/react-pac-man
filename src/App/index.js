@@ -15,6 +15,11 @@ const KEY = {
   DOWN: 40,
 }
 
+const pascalCase = (input) => {
+  const name = input.replace(/-/g, '')
+  return name[0].toLocaleUpperCase() + name.substr(1,name.length)
+}
+
 class App extends Component {
   constructor (props) {
     super(props)
@@ -35,6 +40,7 @@ class App extends Component {
     this.movePlayerRight = this.movePlayerRight.bind(this)
     this.redraw = this.redraw.bind(this)
     this.draw = this.draw.bind(this)
+    this.playerHitGhost = this.playerHitGhost.bind(this)
 
     this.state = {
       gameState: 'START',
@@ -46,7 +52,7 @@ class App extends Component {
         lives: 3,
         invincible: false
       },
-      blinky: {
+      Blinky: {
         index: 81,
         pathPos: 0,
         paths: [
@@ -89,6 +95,7 @@ class App extends Component {
       time: 250,
       timerInterval: '',
       isKeyDown: false,
+      isHittingGhost: false,
       drawPlayerInterval: '',
       moveGhostInterval: '',
       biscuits: [],
@@ -213,6 +220,7 @@ class App extends Component {
   getTileType (x,y) {
     const level = this.state.level
     const maze = this.state.maze[level].slice()
+    const mazeContent = this.state.mazeContent.slice()
     const player = {...this.state.player}
     const bigBiscuits = this.state.bigBiscuits.slice()
     const biscuits = this.state.biscuits.slice()
@@ -225,6 +233,8 @@ class App extends Component {
         return 'biscuit--big'    
       } else if (biscuits.some((elem) => {return (x === elem.x && y === elem.y && !elem.collected)})) {
         return 'biscuit'
+      } else if (mazeContent[y][x].ghostHere){
+        return mazeContent[y][x].ghostName
       } else {
         return null
       }
@@ -239,8 +249,25 @@ class App extends Component {
     return updateMaze[y][x]
   }
 
+  playerHitGhost(player, ghostName) {
+    const ghost = this.state[pascalCase(ghostName)]
+    if (!player.invincible) {
+      player.lives--
+      this.setState({player, isHittingGhost: false})
+      if (player.lives === 0) {
+        return this.setState({gameState: 'GAMEOVER'})
+      } 
+
+    } else {
+      player.score += 20
+      ghost.path = []
+      ghost.index = 300 // off map
+      return this.setState({player, ghost, isHittingGhost: false})
+    }
+  }
+
   onKeyDown (event) {
-    console.log('key is down!')
+    //console.log('key is down!')
     const isKeyDown = this.state.isKeyDown
     const {
       // altKey,
@@ -285,11 +312,13 @@ class App extends Component {
     this.setState({isKeyDown: false})
   }
 
-  drawGhost (blinky, Pinky, Inky, Clyde,x,y, index) {
+  drawGhost (Blinky, Pinky, Inky, Clyde,x,y, index) {
     const player = {...this.state.player}
+    // if player is already hitting the ghost, don't handle that again right now
+    const isHittingGhost = this.state.isHittingGhost
 
-    if (x === player.x && y === player.y && index === blinky.index) {
-      if (!player.invincible) {
+    if (x === player.x && y === player.y && index === Blinky.index) {
+      if (!player.invincible && !isHittingGhost) {
         player.lives--
         this.setState({player})
         if (player.lives === 0) {
@@ -297,16 +326,16 @@ class App extends Component {
           return false       
         } 
 
-      } else {
+      } else if (!isHittingGhost) {
         player.score += 20
-        blinky.path = []
-        blinky.index = 300
-        this.setState({player, blinky})
+        Blinky.path = []
+        Blinky.index = 300
+        this.setState({player, Blinky})
         return false
       }
     }
     if (x === player.x && y === player.y && index === Pinky.index) {
-      if (!player.invincible) {
+      if (!player.invincible && !isHittingGhost) {
         player.lives--
         this.setState({player})
         if (player.lives === 0) {
@@ -314,7 +343,7 @@ class App extends Component {
           return false       
         } 
 
-      } else {
+      } else if (!isHittingGhost) {
         player.score += 20
         Pinky.path = []
         Pinky.index = 300
@@ -323,7 +352,7 @@ class App extends Component {
       }
     }
     if (x === player.x && y === player.y && index === Inky.index) {
-      if (!player.invincible) {
+      if (!player.invincible && !isHittingGhost) {
         player.lives--
         this.setState({player})
         if (player.lives === 0) {
@@ -331,7 +360,7 @@ class App extends Component {
           return false       
         } 
 
-      } else {
+      } else if (!isHittingGhost) {
         player.score += 20
         Inky.path = []
         Inky.index = 300
@@ -340,7 +369,7 @@ class App extends Component {
       }
     }
     if (x === player.x && y === player.y && index === Clyde.index) {
-      if (!player.invincible) {
+      if (!player.invincible && !isHittingGhost) {
         player.lives--
         this.setState({player})
         if (player.lives === 0) {
@@ -348,7 +377,7 @@ class App extends Component {
           return false       
         } 
 
-      } else {
+      } else if (!isHittingGhost) {
         player.score += 20
         Clyde.path = []
         Clyde.index = 300
@@ -357,7 +386,7 @@ class App extends Component {
       }
     }
     
-    if (index === blinky.index 
+    if (index === Blinky.index 
       || index === Pinky.index 
       || index === Inky.index 
       || index === Clyde.index) {
@@ -368,8 +397,8 @@ class App extends Component {
     
   }
 
-  getGhostName(blinky,Pinky,Inky,Clyde,index) {
-    if(blinky.index === index) {
+  getGhostName(Blinky,Pinky,Inky,Clyde,index) {
+    if(Blinky.index === index) {
       return 'blinky'
     } else if(Pinky.index === index) {
       return 'pinky'
@@ -387,7 +416,7 @@ class App extends Component {
     const mazeContent = []
     const biscuits = []
     const bigBiscuits = []
-    const blinky = {...this.state.blinky}
+    const Blinky = {...this.state.Blinky}
     const Pinky = {...this.state.Pinky}
     const Inky = {...this.state.Inky}
     const Clyde = {...this.state.Clyde}
@@ -397,12 +426,12 @@ class App extends Component {
       return
     }
 
-    if (blinky.pathPos < blinky.path.length - 1) {
-      blinky.index = blinky.path[blinky.pathPos]
-      blinky.pathPos++
+    if (Blinky.pathPos < Blinky.path.length - 1) {
+      Blinky.index = Blinky.path[Blinky.pathPos]
+      Blinky.pathPos++
     } else {
-      blinky.pathPos = 0
-      blinky.path.reverse()
+      Blinky.pathPos = 0
+      Blinky.path.reverse()
     }
     if (Pinky.pathPos < Pinky.path.length - 1) {
       Pinky.index = Pinky.path[Pinky.pathPos]
@@ -438,8 +467,8 @@ class App extends Component {
         let tile = {
           x,y, 
           type: this.getTileType(x,y), 
-          ghostHere: this.drawGhost(blinky, Pinky, Inky, Clyde, x,y,index), 
-          ghostName: this.getGhostName(blinky,Pinky,Inky,Clyde,index),
+          ghostHere: this.drawGhost(Blinky, Pinky, Inky, Clyde, x,y,index), 
+          ghostName: this.getGhostName(Blinky,Pinky,Inky,Clyde,index),
           index: index++
         }
         mazeContent[y].push(tile)
@@ -449,7 +478,7 @@ class App extends Component {
       }
       ++y
     }
-    this.setState({mazeContent, biscuits, bigBiscuits, blinky, Pinky, Inky,Clyde})
+    this.setState({mazeContent, biscuits, bigBiscuits, Blinky, Pinky, Inky,Clyde})
   }
 
   draw () {
@@ -463,7 +492,7 @@ class App extends Component {
       ]
     const level = this.state.level
     const maze = this.state.maze[level].slice()
-    const blinky = {...this.state.blinky}
+    const Blinky = {...this.state.Blinky}
     const Pinky = {...this.state.Pinky}
     const Inky = {...this.state.Inky}
     const Clyde = {...this.state.Clyde}
@@ -480,8 +509,8 @@ class App extends Component {
         let tile = {
           x,y, 
           type: this.createTileType(x,y), 
-          ghostHere: this.drawGhost(blinky,Pinky,Inky,Clyde, x,y, index), 
-          ghostName: this.getGhostName(blinky,Pinky,Inky,Clyde,index),
+          ghostHere: this.drawGhost(Blinky,Pinky,Inky,Clyde, x,y, index), 
+          ghostName: this.getGhostName(Blinky,Pinky,Inky,Clyde,index),
           index: index++
         }        
         mazeContent[y].push(tile)
@@ -499,12 +528,12 @@ class App extends Component {
 
     const obstacles = ['x']
     const finder = new Pathfinder(20, 11, maze1D, obstacles)
-    blinky.path = finder.findPath(blinky.paths[level].start, blinky.paths[level].end)
+    Blinky.path = finder.findPath(Blinky.paths[level].start, Blinky.paths[level].end)
     Pinky.path = finder.findPath(Pinky.paths[level].start, Pinky.paths[level].end)
     Inky.path = finder.findPath(Inky.paths[level].start, Inky.paths[level].end)
     Clyde.path = finder.findPath(Clyde.paths[level].start, Clyde.paths[level].end)
 
-    this.setState({mazeContent, biscuits, bigBiscuits,blinky, Pinky, Inky, Clyde})
+    this.setState({mazeContent, biscuits, bigBiscuits,Blinky, Pinky, Inky, Clyde})
   }
   movePlayerUp () {
     const player = {...this.state.player}
@@ -512,10 +541,17 @@ class App extends Component {
     player.y--
     player.direction = 'up'
     const result = this.getTileType(player.x,player.y)  
+    //console.log({result})
+    if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
+      console.log('player hit ghost:',{result})   
+      this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
+      
+    }
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
     // if (biscuits.length <= 95) {
+    
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
@@ -529,10 +565,13 @@ class App extends Component {
     player.y++
     player.direction = 'down'    
     const result = this.getTileType(player.x,player.y)  
+    if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
+      console.log('player hit ghost:',{result})    
+      this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
+    }
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
@@ -546,10 +585,14 @@ class App extends Component {
     player.x--
     player.direction = 'left'    
     const result = this.getTileType(player.x,player.y)  
+    //console.log('player hit ghost:',{result})    
+    if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
+      console.log('player hit ghost:',{result})    
+      this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
+    }
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
@@ -563,10 +606,15 @@ class App extends Component {
     player.x++
     player.direction = 'right'    
     const result = this.getTileType(player.x,player.y)  
+    //console.log({result})    
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
     result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
     // if (biscuits.length <= 95) {
+    if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
+      console.log('player hit ghost:',{result})    
+      this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
+    }
     if (!biscuits.length) {      
       this.setState({gameState:'NEXTLEVEL'})
       return
