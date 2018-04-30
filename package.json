@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "react-test-renderer": "^15.5.4",
-    "react-addons-test-utils": "^15.4.2",
     "enzyme": "^2.8.2",
-    "gh-pages": "1.0.0",
-    "react-scripts": "0.9.5",
+    "gh-pages": "^1.1.0",
+    "react-addons-test-utils": "^15.4.2",
+    "react-scripts": "^0.9.5",
+    "react-test-renderer": "^15.5.4",
     "sinon": "^2.2.0"
   },
   "scripts": {
