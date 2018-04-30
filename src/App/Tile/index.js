@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './index.css'
 
-class Tile extends Component {
-  render () {
-    const tileObject = this.props.tileObject
-    const player = this.props.player
+const Tile = (props) => {
+    const tileObject = props.tileObject
+    const player = props.player
 
     if (tileObject.ghostHere) {
       return (
@@ -46,7 +45,6 @@ class Tile extends Component {
         <div className={tileObject.type}>{/*tileObject.index*/}</div>
       </div>
     )
-  }
 }
 
 export default Tile

@@ -269,6 +269,7 @@ class App extends Component {
   onKeyDown (event) {
     //console.log('key is down!')
     const isKeyDown = this.state.isKeyDown
+    const { direction } = this.state.player
     const {
       // altKey,
       // ctrlKey,
@@ -293,13 +294,13 @@ class App extends Component {
     }
 
     if (keyCode === KEY.UP) {
-      movePlayerUp()
+      direction !== 'up' && movePlayerUp()
     } else if (keyCode === KEY.DOWN) {
-      movePlayerDown()
+      direction !== 'down' && movePlayerDown()
     } else if (keyCode === KEY.LEFT) {
-      movePlayerLeft()
+      direction !== 'left' && movePlayerLeft()
     } else if (keyCode === KEY.RIGHT) {
-      movePlayerRight()
+      direction !== 'right' && movePlayerRight()
     }
 
     this.setState((prevState) => {

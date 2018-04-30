@@ -1,37 +1,30 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Tile from '../Tile'
 import './index.css'
 
-class Maze extends Component {
-  constructor(props) {
-    super(props)
-    this.renderMazeRow = this.renderMazeRow.bind(this)
-    this.renderMazeColumn = this.renderMazeColumn.bind(this)
-  }
+const renderMazeColumn = (mazeColumnObject, player, index) => {
+  return (
+    <div key={index} className="column-container">
+      <Tile player={player} tileObject={mazeColumnObject}/>
+    </div>
+  )
+}
 
-  renderMazeRow (mazeRow, index) {
-    return (
-      <div key={index} className={`row-container`}>
-        {mazeRow.map(this.renderMazeColumn)}
-      </div>
-    )
-  }
+const renderMazeRow = (mazeRow, player, index) => {
+  return (
+    <div key={index} className={`row-container`}>
+      {mazeRow.map((column) => renderMazeColumn(column, player))}
+    </div>
+  )
+}
 
-  renderMazeColumn (mazeColumnObject, index) {
-    // console.log(mazeColumnObject)
-    return (
-      <div key={index} className="column-container">
-        <Tile player={this.props.player} tileObject={mazeColumnObject}/>
-      </div>
-    )
-  }
-  render () {
-    return (
-      <div className={`maze-container`}>
-        {this.props.mazeContent.map(this.renderMazeRow)}
-      </div>
-    )
-  }
+const Maze = (props) => {
+
+  return (
+    <div className={`maze-container`}>
+      {props.mazeContent.map((mazeRow) => renderMazeRow(mazeRow, props.player))}
+    </div>
+  )
 }
 
 export default Maze
