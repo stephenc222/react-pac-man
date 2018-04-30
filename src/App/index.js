@@ -44,6 +44,7 @@ class App extends Component {
 
     this.state = {
       gameState: 'START',
+      invincibleTimer: 0,
       player: {
         x: 1,
         y: 3,
@@ -188,7 +189,13 @@ class App extends Component {
       this.setState({gameState: 'GAMEOVER'})
       return
     }
-    this.setState({ time: this.state.time - 1});
+    this.setState({ 
+      time: this.state.time - 1, 
+      invincibleTimer: 
+        this.state.invincibleTimer > 0 
+        ? --this.state.invincibleTimer
+        : 0 
+    })
   }
 
   createTileType (x,y) {
@@ -456,8 +463,6 @@ class App extends Component {
       Clyde.path.reverse()
     }
 
-  
-
     let x = 0
     let y = 0
     let index = 0
@@ -486,10 +491,10 @@ class App extends Component {
     const mazeContent = []
     const biscuits = []
     const bigBiscuits = [
-        { x: 1,  y:1 }, 
-        { x: 18, y:1 }, 
-        { x: 1,  y:9 }, 
-        { x: 18, y:9 }, 
+        { x: 1,  y: 1 }, 
+        { x: 18, y: 1 }, 
+        { x: 1,  y: 9 }, 
+        { x: 18, y: 9 }, 
       ]
     const level = this.state.level
     const maze = this.state.maze[level].slice()
@@ -539,88 +544,112 @@ class App extends Component {
   movePlayerUp () {
     const player = {...this.state.player}
     const biscuits = this.state.biscuits.slice()
+    let invincibleTimer = this.state.invincibleTimer
     player.y--
     player.direction = 'up'
     const result = this.getTileType(player.x,player.y)  
-    //console.log({result})
     if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
-      console.log('player hit ghost:',{result})   
       this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
-      
     }
     result === 'wall' && player.y++
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
-    
+    result === 'biscuit--big' 
+    && (player.score += 10) 
+    && (player.invincible = true) 
+    && (invincibleTimer+=3)
+
+    if (invincibleTimer <= 0) {
+      player.invincible = false
+    }
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
-    this.setState({player},this.redraw)
+    this.setState({player, invincibleTimer},this.redraw)
   }
 
   movePlayerDown () {
     const player = {...this.state.player}
-    const biscuits = this.state.biscuits.slice()    
+    const biscuits = this.state.biscuits.slice()   
+    let invincibleTimer = this.state.invincibleTimer 
     player.y++
     player.direction = 'down'    
     const result = this.getTileType(player.x,player.y)  
     if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
-      console.log('player hit ghost:',{result})    
       this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
     }
     result === 'wall' && player.y--
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    result === 'biscuit--big' 
+    && (player.score += 10) 
+    && (player.invincible = true) 
+    && (invincibleTimer+=3)
+
+    if (invincibleTimer <= 0) {
+      player.invincible = false
+    }
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
-    this.setState({player},this.redraw)
+    this.setState({player, invincibleTimer},this.redraw)
   }
 
   movePlayerLeft () {
     const player = {...this.state.player}
     const biscuits = this.state.biscuits.slice()
+    let invincibleTimer = this.state.invincibleTimer
     player.x--
     player.direction = 'left'    
     const result = this.getTileType(player.x,player.y)  
-    //console.log('player hit ghost:',{result})    
+
     if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
-      console.log('player hit ghost:',{result})    
       this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
     }
     result === 'wall' && player.x++
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
+    result === 'biscuit--big' 
+    && (player.score += 10) 
+    && (player.invincible = true) 
+    && (invincibleTimer+=3)
+
+    if (invincibleTimer <= 0) {
+      player.invincible = false
+    }
     if (!biscuits.length) {
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
-    this.setState({player},this.redraw)
+    this.setState({player, invincibleTimer},this.redraw)
   }
 
   movePlayerRight () {
     const player = {...this.state.player}
     const biscuits = this.state.biscuits.slice()
+    let invincibleTimer = this.state.invincibleTimer
     player.x++
     player.direction = 'right'    
     const result = this.getTileType(player.x,player.y)  
     //console.log({result})    
     result === 'wall' && player.x--
     result === 'biscuit' && player.score++
-    result === 'biscuit--big' && (player.score += 10) && (player.invincible = true)
-    // if (biscuits.length <= 95) {
+    result === 'biscuit--big' 
+    && (player.score += 10) 
+    && (player.invincible = true) 
+    && (invincibleTimer+=3)
+
     if (result === 'blinky' || result === 'inky' || result === 'clyde' || result === 'pinky') {
-      console.log('player hit ghost:',{result})    
       this.setState({isHittingGhost: true}, () => this.playerHitGhost(player, result))
     }
     if (!biscuits.length) {      
       this.setState({gameState:'NEXTLEVEL'})
       return
     }
-    this.setState({player},this.redraw)
+
+    if (invincibleTimer <= 0) {
+      player.invincible = false
+    }
+    this.setState({player, invincibleTimer},this.redraw)
   }
 
   reloadGame () {
