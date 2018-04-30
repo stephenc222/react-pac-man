@@ -13,7 +13,7 @@ const renderMazeColumn = (mazeColumnObject, player, index) => {
 const renderMazeRow = (mazeRow, player, index) => {
   return (
     <div key={index} className={`row-container`}>
-      {mazeRow.map((column) => renderMazeColumn(column, player))}
+      {mazeRow.map((column, index) => renderMazeColumn(column, player, index))}
     </div>
   )
 }
@@ -22,7 +22,7 @@ const Maze = (props) => {
 
   return (
     <div className={`maze-container`}>
-      {props.mazeContent.map((mazeRow) => renderMazeRow(mazeRow, props.player))}
+      {props.mazeContent.map((mazeRow, index) => renderMazeRow(mazeRow, props.player, index))}
     </div>
   )
 }
