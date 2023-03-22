@@ -4,18 +4,18 @@
   "homepage": "https://stepehenc222.github.io/react-pac-man",
   "private": true,
   "dependencies": {
-    "mime": "^1.4.1",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "mime": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "enzyme": "^2.8.2",
-    "gh-pages": "^1.2.0",
+    "chai": "^4.3.7",
+    "enzyme": "^3.11.0",
+    "gh-pages": "^5.0.0",
     "react-addons-test-utils": "^15.4.2",
-    "react-scripts": "^0.9.5",
-    "react-test-renderer": "^15.5.4",
-    "sinon": "^2.2.0"
+    "react-scripts": "^5.0.1",
+    "react-test-renderer": "^18.2.0",
+    "sinon": "^15.0.2"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -24,5 +24,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
